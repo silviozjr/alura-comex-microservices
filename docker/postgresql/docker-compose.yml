@@ -2,11 +2,11 @@
 services:
   db:
     image: postgres:16
-    container_name: postgres16
+    container_name: postgres16-2
     environment:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
-      - POSTGRES_DB=comex
+      - POSTGRES_DB=comex_db
     ports:
       - "5432:5432"
     volumes:

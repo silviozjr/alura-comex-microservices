@@ -10,7 +10,7 @@
         <relativePath/>
     </parent>
     <groupId>br.com.alura</groupId>
-    <artifactId>comex</artifactId>
+    <artifactId>usuario-api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
     <properties>

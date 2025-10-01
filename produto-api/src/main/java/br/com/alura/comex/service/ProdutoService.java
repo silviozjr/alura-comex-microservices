@@ -1,17 +1,29 @@
 package br.com.alura.comex.service;
 
-import br.com.alura.comex.model.Produto;
-import br.com.alura.comex.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import java.util.List;
 
-@Component
+import org.springframework.stereotype.Service;
+
+import br.com.alura.comex.model.Produto;
+import br.com.alura.comex.repository.ProdutoRepository;
+import jakarta.transaction.Transactional;
+
+@Service
 public class ProdutoService {
 
-    @Autowired
-    private ProdutoRepository repository;
+  private final ProdutoRepository repositorio;
 
-    public void cadastrar(Produto obj) {
-        repository.save(obj);
-    }
+  public ProdutoService(ProdutoRepository produtoRepository) {
+    this.repositorio = produtoRepository;
+  }
+
+  @Transactional
+  public void cadastrar(Produto produto) {
+    repositorio.save(produto);
+  }
+
+  public List<Produto> listarTodos() {
+    return repositorio.findAll();
+  }
+
 }

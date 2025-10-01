@@ -1,27 +1,45 @@
 package br.com.alura.comex.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "produto")
 public class Produto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(length = 50)
     private String nome;
 
+    @Column(length = 256)
     private String descricao;
 
+    private double qtdEstoque;
     private double preco;
 
-    @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-    private Categoria categoria;
+    @ManyToMany(cascade = { CascadeType.MERGE, CascadeType.REFRESH })
+    @JoinTable(
+        name = "categoria_produto",
+        joinColumns = @JoinColumn(name = "produto_id"), 
+        inverseJoinColumns = @JoinColumn(name = "categoria_id")
+    )
+    private List<Categoria> categorias = new ArrayList<>();
+
 
     public Long getId() {
         return id;
@@ -55,12 +73,27 @@ public class Produto {
         this.preco = preco;
     }
 
-    public Categoria getCategoria() {
-        return categoria;
+    public List<Categoria> getCategorias() {
+        return Collections.unmodifiableList(categorias);
     }
 
-    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
+    public double getQtdEstoque() {
+        return qtdEstoque;
+    }
+
+    public void setQtdEstoque(double qtdEstoque) {
+        this.qtdEstoque = qtdEstoque;
+    }
+
+    public void adicionaCategoria(Categoria categoria) {
+        // verifica se a categoria já foi adicionada com base no id
+        for (Categoria categoriaDaLista : categorias) {
+            if (categoriaDaLista.getId().equals(categoria.getId())) {
+                return;
+            }
+        }
+
+        this.categorias.add(categoria);
     }
 
     @Override
@@ -70,7 +103,7 @@ public class Produto {
                 ", nome='" + nome + '\'' +
                 ", descricao='" + descricao + '\'' +
                 ", preco=" + preco +
-                ", categoria=" + categoria +
+                ", categorias=" + categorias +
                 '}';
     }
 }

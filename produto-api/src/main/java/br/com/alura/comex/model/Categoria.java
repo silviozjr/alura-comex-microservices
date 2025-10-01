@@ -1,22 +1,34 @@
 package br.com.alura.comex.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "categoria")
 public class Categoria {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "nome", nullable = false, length = 50)
+    @Column(length = 50)
     private String nome;
-
-    public Categoria(String nome) {
-        this.nome = nome;
-    }
+    private boolean ativo;
 
     public Categoria() {
+    }
+
+    public Categoria(Long id) {
+        this.id = id;
+    }
+
+    public Categoria(Long id, String nome, boolean ativo) {
+        this.id = id;
+        this.nome = nome;
+        this.ativo = ativo;
     }
 
     public Long getId() {
@@ -33,6 +45,14 @@ public class Categoria {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
+    }
+
+    public boolean isAtivo() {
+        return this.ativo;
     }
 
     @Override

@@ -1,17 +1,28 @@
 package br.com.alura.comex.service;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import br.com.alura.comex.model.Categoria;
 import br.com.alura.comex.repository.CategoriaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
+@Service
 public class CategoriaService {
 
-    @Autowired
-    private CategoriaRepository repository;
+  private final CategoriaRepository repositorio;
 
-    public void cadastrar(Categoria categoria) {
-        repository.save(categoria);
-    }
+  public CategoriaService(CategoriaRepository categoriaRepository) {
+    this.repositorio = categoriaRepository;
+  }
+
+  public void cadastrar(Categoria categoria) {    
+    categoria.setAtivo(true);
+    repositorio.save(categoria);
+  }
+
+  public List<Categoria> listarTodos() {
+    return repositorio.findAll();
+  }
+
 }

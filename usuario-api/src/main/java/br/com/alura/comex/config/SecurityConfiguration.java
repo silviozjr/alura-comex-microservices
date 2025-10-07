@@ -30,6 +30,7 @@ public class SecurityConfiguration {
         .authorizeHttpRequests(req -> req
             .requestMatchers("/login").permitAll()
             .requestMatchers(HttpMethod.POST, "/api/clientes").permitAll()
+            .requestMatchers(HttpMethod.POST, "/api/token/validar").permitAll()
             .anyRequest().authenticated())
         .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
         .build();

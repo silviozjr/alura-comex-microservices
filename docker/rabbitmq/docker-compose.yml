@@ -1,0 +1,20 @@
+version: "3.6"
+
+services:
+  rabbitmq:
+    image: rabbitmq:3.10-management
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      # Usa um volume gerenciado pelo Docker em vez de uma pasta local
+      - rabbitmq_data:/var/lib/rabbitmq/
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
+
+# Declara o volume no nível raiz do arquivo
+volumes:
+  rabbitmq_data:

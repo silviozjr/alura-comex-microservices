@@ -1,5 +1,8 @@
 package br.com.alura.comex.controller.login;
 
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,10 +22,14 @@ public class AutenticacaoController {
 
   private final AuthenticationManager manager;
   private final TokenService tokenService;
+  private final RabbitTemplate rabbitTemplate;
 
-  public AutenticacaoController(AuthenticationManager manager, TokenService tokenService) {
+  public AutenticacaoController(AuthenticationManager manager, TokenService tokenService, RabbitTemplate rabbitTemplate,
+      MessageConverter jsonMessageConverter) {
     this.manager = manager;
     this.tokenService = tokenService;
+    this.rabbitTemplate = rabbitTemplate;
+    rabbitTemplate.setMessageConverter(jsonMessageConverter);
   }
 
   @PostMapping
@@ -31,6 +38,14 @@ public class AutenticacaoController {
     var authentication = manager.authenticate(authenticationToken);
 
     var tokenJWT = tokenService.gerarToken((Usuario) authentication.getPrincipal());
+
+    var mensagem = new MensagemDadosAutenticacao(
+        tokenJWT,
+        ((Usuario) authentication.getPrincipal()).getUsername(),
+        true,
+        "AUTH");
+
+    rabbitTemplate.convertAndSend("usuario.autenticado", mensagem);
 
     return ResponseEntity.ok(new DadosTokenJWT(tokenJWT));
   }

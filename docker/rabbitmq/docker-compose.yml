@@ -15,6 +15,11 @@ services:
       - RABBITMQ_DEFAULT_USER=admin
       - RABBITMQ_DEFAULT_PASS=admin
 
+  kafka:
+    image: apache/kafka:latest
+    ports:
+      - 9092:9092
+
 # Declara o volume no nível raiz do arquivo
 volumes:
   rabbitmq_data:
